@@ -1,7 +1,7 @@
 // variables for board, player and AI
 var origBoard;
-const humanPlayer = 'O';
-const aiPlayer = 'X';
+var humanPlayer = 'X';
+var aiPlayer = 'O';
 
 // Create a 2D Array of all winning combinations for the game.
 const winningStates = [
@@ -23,16 +23,22 @@ startGame();
 
 // Start game function
 function startGame() {
+	var checkPlayer = document.getElementById("AI");
 	// will use the gameOver styling when the game is reset. Already reset when game original starts.
 	document.querySelector(".gameOver").style.display = "none";
 
 	// Loops threw each cell to establish index inorder to click each cell
 	// These numbers can be referenced later to check for empty cells.
-	origBoard = Array.from(Array(9).keys());
+	origBoard = Array.from(Array(9).keys()); // Creates the array of keys or numbers
 	for (var i = 0; i < cells.length; i++) {
-		cells[i].innerText = '';
-		cells[i].style.removeProperty('background-color');
+		cells[i].innerText = ''; // sets inner text to nothing
+		cells[i].style.removeProperty('background-color'); // important for restart
 		cells[i].addEventListener('click', mouseClick, false);
+	}
+	if(checkPlayer.checked == true){
+		humanPlayer = 'O';
+		aiPlayer = 'X';
+		turn(bestPosition(), aiPlayer);
 	}
 }
 
@@ -41,7 +47,9 @@ function mouseClick(boardSpace) {
 	if (typeof origBoard[boardSpace.target.id] == 'number') {
 		turn(boardSpace.target.id, humanPlayer)
 		// As long as game is not in a tie state AI looks for best position
-		if (!checkTie()) turn(bestPosition(), aiPlayer);
+		if (!checkTie()){
+			turn(bestPosition(), aiPlayer);
+		} 
 	}
 }
 
@@ -49,18 +57,21 @@ function mouseClick(boardSpace) {
 function turn(squareId, player) {
 	origBoard[squareId] = player; // sets cell to either X or O
 	document.getElementById(squareId).innerText = player;// sets cell to either X or O
-	var gameWon = isWin(origBoard, player)
-	if (gameWon) {
-		gameOver(gameWon)
+	var gameWon = isWin(origBoard, player) // returns true or false if someone wins
+	if (gameWon) { // if true
+		gameOver(gameWon);
 	}
 }
 
 // => means parameters => { statements }
-function isWin(board, player) {
-	var plays = board.reduce((a, e, i) =>
-		(e === player) ? a.concat(i) : a, []);
+function isWin(board, player) { // passes different states of the board
+	// finds all the places on the board that have already been played in.
+	// Reduces element down to one number accum is set to an array that played indexes are added to.
+	var plays = board.reduce((accum, element, index) =>
+		(element === player) ? accum.concat(index) : accum, []);// set accum to array
 	var gameWon = null;
 	for (var [index, win] of winningStates.entries()) {
+		// Loops thru and checks cells played using plays variable to check winning states
 		if (win.every(elem => plays.indexOf(elem) > -1)) {
 			gameWon = { index: index, player: player };
 			break;
@@ -123,7 +134,7 @@ function minimax(newBoard, player) {
 	else if (openSpaces.length === 0) {
 		return { score: 0 }; // means no space are left the game is over.
 	}
-	var moves = [];
+	var moves = []; // used to collect scores
 	for (var i = 0; i < openSpaces.length; i++) {
 		var move = {};
 		move.index = newBoard[openSpaces[i]];
@@ -131,7 +142,7 @@ function minimax(newBoard, player) {
 
 		if (player == aiPlayer) {
 			var result = minimax(newBoard, humanPlayer);
-			move.score = result.score;
+			move.score = result.score; // stores score into move variable
 		}
 		else {
 			var result = minimax(newBoard, aiPlayer);
@@ -144,6 +155,7 @@ function minimax(newBoard, player) {
 	}
 
 	var bestMove;
+	// used to make sure ai place move in the best position based on the highest number in the highest layer of the tree.
 	if (player === aiPlayer) { // === checks that type and value are the same (script equality)
 		var bestScore = -100; // just need to be a low number
 		for (var i = 0; i < moves.length; i++) {
