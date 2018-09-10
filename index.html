@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- Terry James / CS396 / TicTacToe Game 
+     Coded using help from W3Schools-->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Tic-Tac-Toe</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <div>
+        <center>
+            <h1>Tic-Tac-Toe</h1>
+            <button align="top" onclick="startGame()">Restart Game</button>
+        </center>
+        <form>
+            <h3>Who goes first?</h3>
+            <input type="radio" name="Player" value="Human"> Player<br>
+            <input type="radio" name="AI" value="aiSystem"> AI<br>
+        </form>
+    </div>
+    <!-- Use a table to create the game board-->
+    <table>
+        <tr>
+            <td class="cell" id="0"></td>
+            <td class="cell" id="1"></td>
+            <td class="cell" id="2"></td>
+        </tr>
+        <tr>
+            <td class="cell" id="3"></td>
+            <td class="cell" id="4"></td>
+            <td class="cell" id="5"></td>
+        </tr>
+        <tr>
+            <td class="cell" id="6"></td>
+            <td class="cell" id="7"></td>
+            <td class="cell" id="8"></td>
+        </tr>
+    </table>
+
+    <!-- Used to start and restart a game. -->
+    <div class="gameOver">
+        <div class="text"></div>
+        <!-- Creates a buttom that allows player to restart the game at any point.-->
+        <button onclick="startGame()">Play Again</button>
+    </div>
+
+    <!-- Script to access functions in the javascript file.-->
+    <script src="gameScript.js"></script>
+</body>
+
+</html>

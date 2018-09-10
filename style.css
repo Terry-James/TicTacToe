@@ -1,0 +1,50 @@
+/* Styling for the game board */
+td {
+    border: 2px solid #000000;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: "Comic Sans Ms",  serif;
+    font-size: 70px;
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    position: absolute;
+    left: 50%;
+    margin-top: 80px;
+    margin-left: -155px;
+    top: 50px;
+}
+table tr:first-child td{
+    border-top: 0;
+}
+table tr:last-child td{
+    border-bottom: 0;
+}
+table tr td:first-child{
+    border-left: 0;
+}
+table tr td:last-child{
+    border-right: 0;
+}
+
+/* Styling used when the game ends or is reset to wipe the board clean.
+Also sets the color and position of the win, lose, draw message. */
+.gameOver{
+    display: none;
+    width: 200px;
+    top: 120;
+    background-color: rgba(106, 58, 196, 0.8);
+    position: absolute;
+    left: 50%;
+    margin-left: 155px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-size: 2em;
+}
