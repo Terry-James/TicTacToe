@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Terry James / CS396 / TicTacToe Game 
-     Coded using help from W3Schools-->
+     Coded using help from W3Schools and https://en.wikipedia.org/wiki/Minimax-->
 <html>
 
 <head>
@@ -8,7 +8,11 @@
     <title>Tic-Tac-Toe</title>
 
     <link rel="stylesheet" href="style.css">
-
+<style>
+    body{
+        background-color: lightblue;
+    }
+</style>
 </head>
 
 <body>
@@ -18,10 +22,9 @@
             <button align="top" onclick="startGame()">Restart Game</button>
         </center>
         <form>
-            <h3>Who goes first?</h3>
-            <input type="radio" name="Player" value="Human"> Player<br>
-            <input type="radio" name="AI" value="aiSystem"> AI<br>
-        </form>
+            <h3>Check if AI goes first</h3>
+            <input type="radio" name="AI" id="AI" value="computer"> AI First<br>
+          </form>
     </div>
     <!-- Use a table to create the game board-->
     <table>
