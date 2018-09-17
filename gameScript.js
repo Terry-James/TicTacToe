@@ -16,7 +16,7 @@ const winningStates = [
 ]; // Note: constant variables cannot have their values changed but properties can be.
 
 // Used to select the different cells in the table created in index.html.
-const cells = document.querySelectorAll('.cell');
+var cells = document.querySelectorAll('.cell');
 
 // Original start game
 startGame();
@@ -35,7 +35,7 @@ function startGame() {
 		cells[i].style.removeProperty('background-color'); // important for restart
 		cells[i].addEventListener('click', mouseClick, false);
 	}
-	if(checkPlayer.checked == true){
+	if(checkPlayer.checked == true){// check if the radio button is checked
 		humanPlayer = 'O';
 		aiPlayer = 'X';
 		turn(bestPosition(), aiPlayer);
@@ -44,7 +44,7 @@ function startGame() {
 
 // Allows for using the mouse to click cells and not allowing same cell selection.
 function mouseClick(boardSpace) {
-	if (typeof origBoard[boardSpace.target.id] == 'number') {
+	if (typeof origBoard[boardSpace.target.id] == 'number') {// typeof returns a primitive data type
 		turn(boardSpace.target.id, humanPlayer)
 		// As long as game is not in a tie state AI looks for best position
 		if (!checkTie()){
@@ -57,14 +57,14 @@ function mouseClick(boardSpace) {
 function turn(squareId, player) {
 	origBoard[squareId] = player; // sets cell to either X or O
 	document.getElementById(squareId).innerText = player;// sets cell to either X or O
-	var gameWon = isWin(origBoard, player) // returns true or false if someone wins
+	var gameWon = winGame(origBoard, player) // returns true or false if someone wins
 	if (gameWon) { // if true
 		gameOver(gameWon);
 	}
 }
 
 // => means parameters => { statements }
-function isWin(board, player) { // passes different states of the board
+function winGame(board, player) { // passes different states of the board
 	// finds all the places on the board that have already been played in.
 	// Reduces element down to one number accum is set to an array that played indexes are added to.
 	var plays = board.reduce((accum, element, index) =>
@@ -123,56 +123,56 @@ function checkTie() {
 // Uses a minimax algorithm to determine best position for the ai to move
 // This algorithm executes a recursive call to determine the best score/move at each stage of the game
 function minimax(newBoard, player) {
-	var openSpaces = emptySquares(newBoard);
+	var openSpaces = emptySquares();
 
-	if (isWin(newBoard, player)) {
+	if (winGame(newBoard, player)) {
 		return { score: -10 }; // returns -10 if ai turn is not a winning move or is a human winning move
 	}
-	else if (isWin(newBoard, aiPlayer)) {
+	else if (winGame(newBoard, aiPlayer)) {
 		return { score: 10 }; // returns 10 if the move by ai is a winning move or not a winning move by the human player
 	}
 	else if (openSpaces.length === 0) {
 		return { score: 0 }; // means no space are left the game is over.
 	}
-	var moves = []; // used to collect scores
+	var scoreCollection = []; // used to collect scores
 	for (var i = 0; i < openSpaces.length; i++) {
-		var move = {};
+		var move = {};// used to collect scores for ai move
 		move.index = newBoard[openSpaces[i]];
 		newBoard[openSpaces[i]] = player;
 
 		if (player == aiPlayer) {
 			var result = minimax(newBoard, humanPlayer);
-			move.score = result.score; // stores score into move variable
+			move = result; // stores score into move variable
 		}
 		else {
 			var result = minimax(newBoard, aiPlayer);
-			move.score = result.score;
+			move = result;
 		}
 
 		newBoard[openSpaces[i]] = move.index;
 
-		moves.push(move);
+		scoreCollection.push(move);
 	}
 
-	var bestMove;
+	var best;
 	// used to make sure ai place move in the best position based on the highest number in the highest layer of the tree.
 	if (player === aiPlayer) { // === checks that type and value are the same (script equality)
 		var bestScore = -100; // just need to be a low number
-		for (var i = 0; i < moves.length; i++) {
-			if (moves[i].score > bestScore) {
-				bestScore = moves[i].score;
-				bestMove = i; 
+		for (var i = 0; i < scoreCollection.length; i++) {// move thru each scores collected
+			if (scoreCollection[i].score > bestScore) {// if the score is 10 for the ai it is the best move
+				bestScore = scoreCollection[i].score;
+				best = i; 
 			}
 		}
 	}
 	else {
 		var bestScore = 100; // just needs to be a high number
-		for (var i = 0; i < moves.length; i++) {
-			if (moves[i].score < bestScore) {
-				bestScore = moves[i].score;
-				bestMove = i;
+		for (var i = 0; i < scoreCollection.length; i++) {// move thru scores collected
+			if (scoreCollection[i].score < bestScore) {// if the score is -10 for the human then it is not the best move
+				bestScore = scoreCollection[i].score;
+				best = i;
 			}
 		}
 	}
-	return moves[bestMove];
+	return scoreCollection[best]; // return the best move in the collection
 }
