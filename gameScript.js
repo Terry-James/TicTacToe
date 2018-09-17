@@ -142,11 +142,11 @@ function minimax(newBoard, player) {
 
 		if (player == aiPlayer) {
 			var result = minimax(newBoard, humanPlayer);
-			move = result; // stores score into move variable
+			move.score = result.score; // stores score into move variable
 		}
 		else {
 			var result = minimax(newBoard, aiPlayer);
-			move = result;
+			move.score = result.score;
 		}
 
 		newBoard[openSpaces[i]] = move.index;
