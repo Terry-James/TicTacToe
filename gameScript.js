@@ -47,7 +47,7 @@ function mouseClick(boardSpace) {
 	if (typeof origBoard[boardSpace.target.id] == 'number') {// typeof returns a primitive data type
 		turn(boardSpace.target.id, humanPlayer)
 		// As long as game is not in a tie state AI looks for best position
-		if (!checkTie()){
+		if (!checkTie() && !winGame(origBoard, humanPlayer)){
 			turn(bestPosition(), aiPlayer);
 		} 
 	}
@@ -70,7 +70,7 @@ function winGame(board, player) { // passes different states of the board
 	var plays = board.reduce((accum, element, index) =>
 		(element === player) ? accum.concat(index) : accum, []);// set accum to array
 	var gameWon = null;
-	for (var [index, win] of winningStates.entries()) {
+	for (let [index, win] of winningStates.entries()) {
 		// Loops thru and checks cells played using plays variable to check winning states
 		if (win.every(elem => plays.indexOf(elem) > -1)) {
 			gameWon = { index: index, player: player };
@@ -125,7 +125,7 @@ function checkTie() {
 function minimax(newBoard, player) {
 	var openSpaces = emptySquares();
 
-	if (winGame(newBoard, player)) {
+	if (winGame(newBoard, humanPlayer)) {
 		return { score: -10 }; // returns -10 if ai turn is not a winning move or is a human winning move
 	}
 	else if (winGame(newBoard, aiPlayer)) {
@@ -146,7 +146,7 @@ function minimax(newBoard, player) {
 		}
 		else {
 			var result = minimax(newBoard, aiPlayer);
-			move.score = result.score;
+			move.score = result.score; // stores score into move variable
 		}
 
 		newBoard[openSpaces[i]] = move.index;
