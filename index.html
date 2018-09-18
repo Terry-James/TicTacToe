@@ -23,9 +23,19 @@
         </center>
         <form>
             <h3>Check if AI goes first</h3>
-            <input type="radio" name="AI" id="AI" value="computer"> AI First<br>
+            <label><input type="radio" name="ai" id="AI" value="computer"> AI First</label>
+            <a href="index.html" id="clear">Clear</a>
+            <br>
           </form>
+          <script>
+                document.getElementById("clear").addEventListener('click', functoin()){
+                ["AI"].forEach(function(id){
+                    document.getElementById(id).checked = false;
+                });
+            }
+            </script>
     </div>
+    
     <!-- Use a table to create the game board-->
     <table>
         <tr>
