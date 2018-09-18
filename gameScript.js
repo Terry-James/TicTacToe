@@ -38,7 +38,9 @@ function startGame() {
 	if(checkPlayer.checked == true){// check if the radio button is checked
 		humanPlayer = 'O';
 		aiPlayer = 'X';
-		turn(bestPosition(), aiPlayer);
+		if(!checkTie() && !winGame(origBoard, humanPlayer)){
+			turn(bestPosition(), aiPlayer);
+		}
 	}
 }
 
@@ -50,6 +52,9 @@ function mouseClick(boardSpace) {
 		if (!checkTie() && !winGame(origBoard, humanPlayer)){
 			turn(bestPosition(), aiPlayer);
 		} 
+		if (!checkTie() && !winGame(origBoard, humanPlayer)){ // used to check for tie when ai goes first
+			turn(boardSpace.target.id, humanPlayer)
+		}
 	}
 }
 
@@ -63,17 +68,18 @@ function turn(squareId, player) {
 	}
 }
 
-// => means parameters => { statements }
+// Check for winning states using fat arrow notation
 function winGame(board, player) { // passes different states of the board
 	// finds all the places on the board that have already been played in.
 	// Reduces element down to one number accum is set to an array that played indexes are added to.
 	var plays = board.reduce((accum, element, index) =>
 		(element === player) ? accum.concat(index) : accum, []);// set accum to array
 	var gameWon = null;
-	for (let [index, win] of winningStates.entries()) {
-		// Loops thru and checks cells played using plays variable to check winning states
+
+	for (let [index, win] of winningStates.entries()) { 
+		// Loops thru and checks cells played using plays variable to check in winning states array
 		if (win.every(elem => plays.indexOf(elem) > -1)) {
-			gameWon = { index: index, player: player };
+			gameWon = { index: index, player: player }; // name: value pairing
 			break;
 		}
 	}
@@ -99,7 +105,7 @@ function winMessage(_player) {
 // Checks if a cell is still empty
 function emptySquares() {
 	// returns a list of empty cells by checking if its still a number instead of an X or O
-	return origBoard.filter(s => typeof s == 'number');
+	return origBoard.filter(s => typeof s == 'number'); // uses arrow notation s is a parameter
 }
 
 // Looks for the best position for ai to move
