@@ -1,2 +1,2 @@
 # TicTacToe
-A TicTacToe game created with HTML, and JavaScript
+A TicTacToe game created with HTML, JavaScript, CSS
